@@ -9,7 +9,10 @@ Controller = function() {
 	this.kennungbetrieb = null;
 	this.betrieb = null;
 	this.ort = null;
-
+	
+	//pagefrom
+	this.pageFrom=null;
+	
 	//helper for sql-query
 	this.sql_where_betriebe="";
 	
@@ -84,10 +87,14 @@ $(document).on('tap', '#BetriebeSearchBtn_BSAV', function() {
 $(document).on('tap', '.showMapBtn', function() {
 	if(ctr.betriebeList!=null && ctr.betriebeList.length>0){
 	ctr.mapMode=0;
-	//$.mobile.changePage("#mapPage");
+	ctr.pageFrom=$.mobile.activePage.attr('id');;
 	$.mobile.changePage( "#mapPage");
 	ctr.setMapSize();
 	}
+});
+
+$(document).on('tap', '#backBtn_MP', function() {
+	$.mobile.changePage( "#"+ctr.pageFrom);
 });
 
 

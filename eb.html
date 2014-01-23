@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Luft-Emissions-Betriebe</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style type="text/css">
+
+#mapPagex, #mapCanvasx { width: 100%; height: 100%; padding: 0; }
+</style>
+	
+	<!--cordova -->
+	<!--<script src="libs/cordova.js"></script>-->
+	
+	<!--jquery-->
+	<link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+	<script src="libs/jquery-1.10.2.min.js"></script>
+	<script src="libs/jquery.mobile-1.4.0.min.js"></script>
+	
+	<!--google maps-->
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+	
+	<!--custom scripts-->
+	<script type="text/javascript" src="js/controller_eb.js"></script>
+	<script type="text/javascript">
+		var ctr;
+		$(document).ready(function() {
+	        ctr=new Controller();
+	        ctr.init();
+		});
+	</script>
+</head>
+<body>
+
+
+<div data-role="page" id="startPage">
+	<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+    	<h1>Emissions-Betriebe</h1>
+    	<a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+	</div>
+	<div data-role="content">
+		<h2>Betriebe-Suche:</h2>
+		<a href="#betriebeSearchPosPage" data-role="button">In der Nähe</a>
+		<a href="#betriebeSearchPLZPage" data-role="button">Nach PLZ</a>
+		<a href="#betriebeSearchAdvancedPage" data-role="button">Erweitert</a>
+	</div>
+	<div data-role="footer">
+		<h4>Udo Lang 2014</h4>
+	</div>
+</div>
+
+<div data-role="page" id="contactPage">
+<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+    <a href="#" data-rel="back" data-direction="reverse" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left">back</a>
+    <h1>Emissions-Betriebe</h1>
+    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+</div>
+	<div data-role="content">
+
+		<h3>online-Suche nach Betrieben, die Luftverunreinigungen freisetzen</h3>
+		<h4>basierend auf der deutsche Implementierung (THRU) des European Pollutant Release and Transfer Register (E-PRTR)</h4>
+		<hr/>
+		<h3>erstellt von: Udo Lang<h3>
+		<h3>Kontakt: ud.lang@gmx.net<h3>
+		<hr/>
+		<p>
+				Die Daten basieren auf dem europäischen Umweltregister:
+				European Pollutant Release and Transfer Register (E-PRTR)
+				<a href="http://prtr.ec.europa.eu/">http://prtr.ec.europa.eu/</a>
+		</p>
+		<p>
+				Die deutsche Implementierung ist unter THRU als SQL-Lite-DB verfügbar.
+				<a href="http://www.thru.de/">http://www.thru.de/</a> 
+		</p>
+		<p>
+				Die Daten sind gefiltert nach Betrieben, die Luftverunreinigungen freisetzen.
+				Die Datensätze wurden in eine Google-Fusion-Tabelle geladen.
+				<a href="https://www.google.com/fusiontables/DataSource?docid=1zS6OThUNSryAIF8ehyIF6_dy773RO9j4pN4JyXs#rows:id=1">fusion-tabelle</a>
+		</p>
+		<p>
+				Als Abfrage dient client-seitiges SQL über eine google-API
+		</p>			
+		<p>	
+				Der Datenbestand umfasst 1921 Datensätze.
+				Aktueller Stand ist 2011
+		</p>
+	</div>
+	
+	<div data-role="footer">
+		<h4>Udo Lang 2014</h4>
+	</div>
+	
+</div>
+
+<div data-role="page" id="betriebeSearchPosPage">
+<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+    <a href="#" data-rel="back" data-direction="reverse" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left">back</a>
+    <h1>Emissions-Betriebe</h1>
+    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+    <div data-role="navbar">
+        <ul>
+            <li><a href="#">&nbsp</a></li>
+            <li><a href="#">&nbsp;</a></li>
+            <li><a class="showMapBtn" href="#">Karte</a></li>
+            <li><a href="#">&nbsp;</a></li>
+            <li><a href="#">&nbsp</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div data-role="content">
+			<fieldset>        
+				<label for="actPos_BSPP">Position:</label>
+				<input id="actPos_BSPP" value="" type="text" disabled="disabled"></input>
+				<label for="distPos_BSPP">Entfernung:</label>
+				<input id="dist_BSPP" value="10" type="number"/>
+ 			</fieldset>
+
+	<ul id="betriebeLV_BSPP" data-role="listview" data-autodividers="true" data-split-icon="grid" data-split-theme="d" data-inset="true"></ul>
+	</div>
+	
+	<div data-role="footer">
+		<h4>Udo Lang 2014</h4>
+	</div>
+	
+</div>
+
+
+<div data-role="page" id="betriebeSearchPLZPage">
+<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+    <a href="#" data-rel="back" data-direction="reverse" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left">back</a>
+    <h1>Emissions-Betriebe</h1>
+    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+    <div data-role="navbar">
+        <ul>
+            <li><a href="#">&nbsp</a></li>
+            <li><a href="#">&nbsp;</a></li>
+            <li><a class="showMapBtn" href="#">Karte</a></li>
+            <li><a href="#">&nbsp;</a></li>
+            <li><a href="#">&nbsp</a></li>
+        </ul>
+    </div>
+
+</div>
+	<div data-role="content">
+			<fieldset>        
+				<label for="distPLZ_BSPLZ">Entfernung:</label>
+				<input id="distPLZ_BSPLZ" value="10" type="number"/>
+				<label for="pLZ_BSPLZ">PLZ:</label>
+				<input id="pLZ_BSPLZ" value="40221" type="number"/>
+ 			</fieldset>
+
+	<ul id="betriebeLV_BSPLZ" data-role="listview" data-autodividers="true" data-split-icon="grid" data-split-theme="d" data-inset="true"></ul>
+	</div>
+	
+	<div data-role="footer">
+		<h4>Udo Lang 2014</h4>
+	</div>
+	
+</div>
+
+<div data-role="page" id="betriebeSearchAdvancedPage">
+<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+    <a href="#" data-rel="back" data-direction="reverse" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left">back</a>
+    <h1>Emissions-Betriebe</h1>
+    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+    <div data-role="navbar">
+        <ul>
+            <li><a href="#">&nbsp</a></li>
+            <li><a href="#">&nbsp;</a></li>
+            <li><a class="showMapBtn" href="#">Karte</a></li>
+            <li><a href="#">&nbsp;</a></li>
+            <li><a href="#">&nbsp</a></li>
+        </ul>
+    </div>
+
+</div>
+	<div data-role="content">
+		<fieldset        
+			<label for="name_BSAV">Name:</label>
+			<input id="betrName_BSAV" value="" type="text"/>
+ 			<select id="brancheSel_BSAV" data-native-menu="false"></select>
+ 		</fieldset>
+ 		<hr/>	
+	
+	<div id="moreSearchCol_BSAV" data-role="collapsible" data-mini="true" data-theme="c" data-content-theme="c">
+    <h4>mehr:</h4>
+	<fieldset>
+				<input id="actPosInp_BSAV" value="" type="text" disabled="disabled"></input>
+				<label>km:</label>
+    			<input id="distPosInp_BSAV" value="" type="number" data-inline="true"/>
+		    	<label>
+        			<input id="distPosCB_BSAV" type="checkbox">von Position
+				</label>
+	</fieldset>
+	
+<hr/>
+	
+	<fieldset>
+				<label>km:</label>
+    			<input id="distPLZInp_BSAV" value="" type="number" data-inline="true"/>
+    			<label>PLZ:</label>
+    			<input id="pLZInp_BSAV" value="" type="number" data-inline="true"/>
+		    	<label>
+        			<input id="distPLZCB_BSAV" type="checkbox">von PLZ
+				</label>
+	</fieldset>
+
+</div>
+
+<a href="#" data-role="button" id="BetriebeSearchBtn_BSAV">suchen</a>
+
+	<ul id="betriebeLV_BSAV" data-role="listview" data-autodividers="true" data-split-icon="grid" data-split-theme="d" data-inset="true"></ul>
+	</div>
+	
+	<div data-role="footer">
+		<h4>Udo Lang 2014</h4>
+	</div>
+	
+</div>
+
+
+<div data-role="page" id="mapPage">
+<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+    <a href="#" data-rel="back" data-direction="reverse" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left">back</a>
+    <h1>Emissions-Betriebe</h1>
+    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+</div>
+	<div data-role="content" style="padding:0px;margin:0px;">
+    	<div id="mapCanvas" style="padding:0px;margin:0px;"></div>
+	</div>
+	<div data-role="footer">
+		<h4>2014</h4>
+	</div>
+
+</body>
+<script src="https://apis.google.com/js/client.js?onload=initialize"></script>
+</html>

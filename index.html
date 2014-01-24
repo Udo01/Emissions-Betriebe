@@ -23,7 +23,11 @@
 		var ctr;
 		$(document).ready(function() {
 	        ctr=new Controller();
-	        ctr.init();
+	        //check connection
+	        if (typeof google != "undefined") {
+   				ctr.init();
+			}
+	        else{alert("keine Verbindung");}
 		});
 	</script>
 </head>
@@ -96,11 +100,11 @@
     <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
     <div data-role="navbar">
         <ul>
-            <li><a href="#">&nbsp</a></li>
-            <li><a href="#">&nbsp;</a></li>
-            <li><a class="showMapBtn" href="#">Karte</a></li>
-            <li><a href="#">&nbsp;</a></li>
-            <li><a href="#">&nbsp</a></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="showMapBtn ui-btn ui-corner-all">Karte</button></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
         </ul>
     </div>
 
@@ -131,11 +135,11 @@
     <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
     <div data-role="navbar">
         <ul>
-            <li><a href="#">&nbsp</a></li>
-            <li><a href="#">&nbsp;</a></li>
-            <li><a class="showMapBtn" href="#">Karte</a></li>
-            <li><a href="#">&nbsp;</a></li>
-            <li><a href="#">&nbsp</a></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="showMapBtn ui-btn ui-corner-all">Karte</button></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
         </ul>
     </div>
 
@@ -164,11 +168,11 @@
     <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
     <div data-role="navbar">
         <ul>
-            <li><a href="#">&nbsp</a></li>
-            <li><a href="#">&nbsp;</a></li>
-            <li><a class="showMapBtn" href="#">Karte</a></li>
-            <li><a href="#">&nbsp;</a></li>
-            <li><a href="#">&nbsp</a></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="showMapBtn ui-btn ui-corner-all">Karte</button></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
         </ul>
     </div>
 
@@ -206,8 +210,7 @@
 
 </div>
 
-<a href="#" data-role="button" id="BetriebeSearchBtn_BSAV">suchen</a>
-
+	<button id="BetriebeSearchBtn_BSAV" class="ui-btn ui-corner-all">suchen</button>
 	<ul id="betriebeLV_BSAV" data-role="listview" data-autodividers="true" data-split-icon="grid" data-split-theme="d" data-inset="true"></ul>
 	</div>
 	
@@ -217,10 +220,9 @@
 	
 </div>
 
-
 <div data-role="page" id="mapPage">
 <div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
-    <a href="#" id="backBtn_MP" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left">back</a>
+    <button id="backBtn_MP" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</button>
     <h1>Emissions-Betriebe</h1>
     <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
 </div>
@@ -230,6 +232,7 @@
 	<div data-role="footer">
 		<h4>2014</h4>
 	</div>
+</div>
 
 </body>
 <script src="https://apis.google.com/js/client.js?onload=initialize"></script>

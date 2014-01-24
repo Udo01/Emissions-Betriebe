@@ -87,7 +87,7 @@ $(document).on('tap', '#BetriebeSearchBtn_BSAV', function() {
 $(document).on('tap', '.showMapBtn', function() {
 	if(ctr.betriebeList!=null && ctr.betriebeList.length>0){
 	ctr.mapMode=0;
-	ctr.pageFrom=$.mobile.activePage.attr('id');;
+	ctr.pageFrom=$.mobile.activePage.attr('id');
 	$.mobile.changePage( "#mapPage");
 	ctr.setMapSize();
 	}
@@ -98,7 +98,56 @@ $(document).on('tap', '#backBtn_MP', function() {
 });
 
 
+//test
+document.addEventListener("backbutton", function() {
+    if ( $('.ui-page-active').attr('id') == 'startPage') {
+        ctr.exitAppPopup();
+    } else {
+        history.back();            
+    }
+}, false);
+
+
+$(document).on('pagechangex',function() {
+    console.log("Current:" + $.mobile.navigate.history.getActive().url);
+    console.log("Stack: (active index = " + $.mobile.navigate.history.activeIndex + " -previous index: " + $.mobile.navigate.history.previousIndex + " )");
+    $.each($.mobile.navigate.history.stack, function (index, val) {
+        console.log(index + "-" + val.url);
+    });
+});
+
+$( window ).on( "navigatex", function( event, data ) {
+    console.log("activ index"+$.mobile.navigate.history.activeIndex);
+	$.each($.mobile.navigate.history.stack, function (index, val) {
+        console.log(index + "-" + val.url);
+    });
+//    if ($.mobile.activePage.is('#startPage')) {
+//        navigator.app.exitApp();
+//    }
+//	console.log("nav"+ data.state.info );
+//	console.log("nav"+ data.state.direction )
+//	console.log("nav"+ data.state.url )
+//	console.log("nav"+ data.state.hash )
+	});
 }
+
+//test
+Controller.prototype.exitAppPopup=function() {
+    navigator.notification.confirm(
+          'Programm verlassen?'
+        , function(button) {
+              if (button == 2) {
+                  navigator.app.exitApp();
+              }
+          }
+        , 'Exit'
+        , 'No,Yes'
+    );  
+    return false;
+}
+
+
+
 
 //betriebePage
 //distinct Branche

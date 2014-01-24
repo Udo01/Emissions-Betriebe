@@ -33,7 +33,6 @@ Controller = function() {
 
 Controller.prototype.init = function() {
 	this.geocoder = new google.maps.Geocoder();
-	//
 
 //page events
 $(document).on('pagecreate', '#betriebeSearchAdvancedPage', function(event, ui) {
@@ -93,20 +92,21 @@ $(document).on('tap', '.showMapBtn', function() {
 	}
 });
 
-$(document).on('tap', '#backBtn_MP', function() {
+$(document).on('tap', '#exitBtn', function() {
+	 if (navigator.app) {
+         navigator.app.exitApp();
+     }
+     else if (navigator.device) {
+         navigator.device.exitApp();
+     }
+});
+
+$(document).on('tap', '#backBtn_MPx', function() {
+	window.history.back();
 	$.mobile.changePage( "#"+ctr.pageFrom);
 });
 
-
 //test
-document.addEventListener("backbutton", function() {
-    if ( $('.ui-page-active').attr('id') == 'startPage') {
-        ctr.exitAppPopup();
-    } else {
-        history.back();            
-    }
-}, false);
-
 
 $(document).on('pagechangex',function() {
     console.log("Current:" + $.mobile.navigate.history.getActive().url);
@@ -130,23 +130,6 @@ $( window ).on( "navigatex", function( event, data ) {
 //	console.log("nav"+ data.state.hash )
 	});
 }
-
-//test
-Controller.prototype.exitAppPopup=function() {
-    navigator.notification.confirm(
-          'Programm verlassen?'
-        , function(button) {
-              if (button == 2) {
-                  navigator.app.exitApp();
-              }
-          }
-        , 'Exit'
-        , 'No,Yes'
-    );  
-    return false;
-}
-
-
 
 
 //betriebePage

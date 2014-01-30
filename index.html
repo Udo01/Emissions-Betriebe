@@ -17,18 +17,42 @@
 	<!--google maps-->
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 	
+
 	<!--custom scripts-->
 	<script type="text/javascript" src="js/controller_eb.js"></script>
+	
+	<!-- cordova -->
+	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 	<script type="text/javascript">
-		var ctr;
-		$(document).ready(function() {
+	    var ctr;
+	    document.addEventListener("deviceready", onDeviceReady, false);
+   		
+   		function onDeviceReady() {
+	        //exit button
+	        $(document).on('tap', '#exitBtn', function() {
+				exitFromApp();
+			});
+	        //back button
+	        document.addEventListener("backbutton", function() {
+                if ( $('.ui-page-active').attr('id') == 'startPage') {
+                    exitFromApp();
+                } else {
+                    history.back();            
+                }
+            }, false);
+	        
+	        //controller
 	        ctr=new Controller();
 	        //check connection
 	        if (typeof google != "undefined") {
    				ctr.init();
 			}
 	        else{alert("keine Verbindung");}
-		});
+    	}
+    	
+    	function exitFromApp() {
+			navigator.app.exitApp();
+		}
 	</script>
 </head>
 <body>
@@ -238,5 +262,4 @@
 </div>
 
 </body>
-<script src="https://apis.google.com/js/client.js?onload=initialize"></script>
 </html>

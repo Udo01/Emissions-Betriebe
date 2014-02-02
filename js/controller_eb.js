@@ -41,10 +41,16 @@ $(document).on('pagecreate', '#betriebeSearchAdvancedPage', function(event, ui) 
 
 $(document).on('pageshow', '#betriebeSearchPosPage', function(event, ui) {
 	$.when(ctr.getPosition()).then(function(pos) {
+		if(pos!=null) {
 		ctr.actPos=pos;
 		$("#actPos_BSPP").val(pos);
 		ctr.handleSearchBetriebe_BSPP();
-	});
+		}
+		else
+			{
+			alert("Position nicht verfügbar!");
+			}
+	}).fail(function(){alert("Position nicht verfügbar!");});
 });
 
 $(document).on('pageshow', '#betriebeSearchPLZPage', function(event, ui) {
@@ -74,9 +80,15 @@ $("#pLZ_BSPLZ").on("input", function(e) {
 
 $("#distPosCB_BSAV").on("change", function(e) {
 	$.when(ctr.getPosition()).then(function(pos) {
+		if(pos!=null){
 		ctr.actPos=pos;
 		$("#actPosInp_BSAV").val(pos);
-	});
+		}
+		else
+			{
+			alert("Position nict verfügbar!");
+			}
+	}).fail(function(){alert("Position nict verfügbar!");});
 });
 
 $(document).on('tap', '#BetriebeSearchBtn_BSAV', function() {
@@ -101,36 +113,8 @@ $(document).on('tap', '#exitBtn', function() {
      }
 });
 
-$(document).on('tap', '#backBtn_MPx', function() {
-	window.history.back();
-	$.mobile.changePage( "#"+ctr.pageFrom);
-});
-
-//test
-
-$(document).on('pagechangex',function() {
-    console.log("Current:" + $.mobile.navigate.history.getActive().url);
-    console.log("Stack: (active index = " + $.mobile.navigate.history.activeIndex + " -previous index: " + $.mobile.navigate.history.previousIndex + " )");
-    $.each($.mobile.navigate.history.stack, function (index, val) {
-        console.log(index + "-" + val.url);
-    });
-});
-
-$( window ).on( "navigatex", function( event, data ) {
-    console.log("activ index"+$.mobile.navigate.history.activeIndex);
-	$.each($.mobile.navigate.history.stack, function (index, val) {
-        console.log(index + "-" + val.url);
-    });
-//    if ($.mobile.activePage.is('#startPage')) {
-//        navigator.app.exitApp();
-//    }
-//	console.log("nav"+ data.state.info );
-//	console.log("nav"+ data.state.direction )
-//	console.log("nav"+ data.state.url )
-//	console.log("nav"+ data.state.hash )
-	});
 }
-
+//end init
 
 //betriebePage
 //distinct Branche
@@ -164,9 +148,6 @@ Controller.prototype.fillBrancheSel_BSAV = function(rows) {
 		selectContainer.selectmenu("refresh");
 	}
 }
-
-
-
 
 //betriebeSearchPosPage 
 Controller.prototype.handleSearchBetriebe_BSPP = function() {
@@ -385,6 +366,7 @@ Controller.prototype.getPosition = function(rows) {
 		deferred.resolve(pos);
 	});
 }
+	deferred.fail(function(){deferred.resolve(null)});
 	return deferred.promise();
 }
 

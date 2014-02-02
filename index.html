@@ -22,7 +22,7 @@
 	<script type="text/javascript" src="js/controller_eb.js"></script>
 	
 	<!-- cordova -->
-	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+	<!--<script type="text/javascript" charset="utf-8" src="cordova.js"></script>-->
 	<script type="text/javascript">
 	    var ctr;
 	    document.addEventListener("deviceready", onDeviceReady, false);
@@ -32,14 +32,8 @@
 	        $(document).on('tap', '#exitBtn', function() {
 				exitFromApp();
 			});
-	        //back button
-	        document.addEventListener("backbutton", function() {
-                if ( $('.ui-page-active').attr('id') == 'startPage') {
-                    exitFromApp();
-                } else {
-                    history.back();            
-                }
-            }, false);
+	        
+		document.addEventListener("backbutton", onBackKeyDown, false);        
 	        
 	        //controller
 	        ctr=new Controller();
@@ -52,6 +46,14 @@
     	
     	function exitFromApp() {
 			navigator.app.exitApp();
+		}
+		
+		function onBackKeyDown(){
+                if ( $('.ui-page-active').attr('id') == 'startPage') {
+                    exitFromApp();
+                } else {
+                    history.back();            
+                }
 		}
 	</script>
 </head>

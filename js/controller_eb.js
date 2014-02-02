@@ -40,17 +40,19 @@ $(document).on('pagecreate', '#betriebeSearchAdvancedPage', function(event, ui) 
 });
 
 $(document).on('pageshow', '#betriebeSearchPosPage', function(event, ui) {
-	$.when(ctr.getPosition()).then(function(pos) {
+	ctr.getPosition().done(function (pos) {
 		if(pos!=null) {
-		ctr.actPos=pos;
-		$("#actPos_BSPP").val(pos);
-		ctr.handleSearchBetriebe_BSPP();
-		}
-		else
-			{
-			alert("Position nicht verfügbar!");
+			ctr.actPos=pos;
+			$("#actPos_BSPP").val(pos);
+			ctr.handleSearchBetriebe_BSPP();
 			}
-	}).fail(function(){alert("Position nicht verfügbar!");});
+			else
+				{
+				alert("Position nicht verfügbar!");
+				}   
+	}).fail(function () {
+		alert("Position nicht verfügbar!");
+	});
 });
 
 $(document).on('pageshow', '#betriebeSearchPLZPage', function(event, ui) {
@@ -79,16 +81,18 @@ $("#pLZ_BSPLZ").on("input", function(e) {
 });
 
 $("#distPosCB_BSAV").on("change", function(e) {
-	$.when(ctr.getPosition()).then(function(pos) {
-		if(pos!=null){
-		ctr.actPos=pos;
-		$("#actPosInp_BSAV").val(pos);
-		}
-		else
-			{
-			alert("Position nict verfügbar!");
+	ctr.getPosition().done(function (pos) {
+		if(pos!=null) {
+			ctr.actPos=pos;
+			$("#actPosInp_BSAV").val(pos);
 			}
-	}).fail(function(){alert("Position nict verfügbar!");});
+			else
+				{
+				alert("Position nicht verfügbar!");
+				}   
+	}).fail(function () {
+		alert("Position nicht verfügbar!");
+	});
 });
 
 $(document).on('tap', '#BetriebeSearchBtn_BSAV', function() {
@@ -357,7 +361,7 @@ Controller.prototype.addBetriebeLayer = function() {
 //util functions
 
 //get position
-Controller.prototype.getPosition = function(rows) {
+Controller.prototype.getPositionx = function(rows) {
 	var deferred = new $.Deferred();
 	if (navigator.geolocation) {
 	navigator.geolocation.getCurrentPosition(function(position) {
@@ -368,6 +372,17 @@ Controller.prototype.getPosition = function(rows) {
 }
 	deferred.fail(function(){deferred.resolve(null)});
 	return deferred.promise();
+}
+
+Controller.prototype.getPosition = function() {
+    var deferred = $.Deferred();
+    navigator.geolocation.getCurrentPosition(function (position) {
+		var pos = new google.maps.LatLng(position.coords.longitude,	position.coords.latitude);
+		deferred.resolve(pos);
+    }, function (error) {
+        deferred.reject();
+    });
+    return deferred.promise();
 }
 
 //get position from zip

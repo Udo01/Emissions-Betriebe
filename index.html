@@ -17,12 +17,17 @@
 	<!--google maps-->
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 	
+	<!--plugins-->
+	<!--swipebox-->
+	<script src="plugins/swipebox/jquery.swipebox.min.js"></script>
+	<link rel="stylesheet" href="plugins/swipebox/swipebox.css">
+
 
 	<!--custom scripts-->
 	<script type="text/javascript" src="js/controller_eb.js"></script>
 	
 	<!-- cordova -->
-	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<!-- 	<script type="text/javascript" charset="utf-8" src="cordova.js"></script> -->
 	<script type="text/javascript">
 	    var ctr;
 	    document.addEventListener("deviceready", onDeviceReady, false);
@@ -55,6 +60,43 @@
                     history.back();            
                 }
 		}
+	
+	
+	
+	  var clientId = '1065138508028.apps.googleusercontent.com';
+      var apiKey = 'AIzaSyAZX14yLHGoDHYUuxfL9LV6wjhCP_afLV0';
+
+      var scopes = 'https://www.googleapis.com/auth/fusiontables';
+	  
+	// Initialize the client, set onclick listeners.
+    function initialize() {
+      gapi.client.setApiKey(apiKey);
+      window.setTimeout(function() { auth(true); }, 1);
+    }
+      
+      // Run OAuth 2.0 authorization.
+      function auth(immediate) {
+        gapi.auth.authorize({
+          client_id: clientId,
+          scope: scopes,
+          immediate: immediate
+        }, handleAuthResult);
+      }
+      
+      // Handle the results of the OAuth 2.0 flow.
+      function handleAuthResult(authResult) {
+        var authorizeButton = document.getElementById('authorize-button');
+        if (authResult) {
+          $("#authorize-button").button( "disable" );
+        } else {
+          $("#authorize-button").button( "enable" );
+        
+        	$(document).on('tap', '#authorize-button', function(){ 
+				auth(false); return false; 
+	    	});
+ 
+        }
+      }
 	</script>
 </head>
 <body>
@@ -70,11 +112,11 @@
 		<a href="#betriebeSearchPosPage" data-role="button">In der Nähe</a>
 		<a href="#betriebeSearchPLZPage" data-role="button">Nach PLZ</a>
 		<a href="#betriebeSearchAdvancedPage" data-role="button">Erweitert</a>
-		<hr/>
-		<button id="exitBtn" class="ui-btn ui-corner-all">Exit</button>
+		<h2>Quellen-Suche:</h2>
+		<a href="#quellenSearchPage" data-role="button">Quellen</a>
 	</div>
 	<div data-role="footer">
-		<h4>Udo Lang 2014</h4>
+		<h4>YodaSoft 2014</h4>
 	</div>
 </div>
 
@@ -116,7 +158,7 @@
 	</div>
 	
 	<div data-role="footer">
-		<h4>Udo Lang 2014</h4>
+		<h4>YodaSoft 2014</h4>
 	</div>
 	
 </div>
@@ -130,9 +172,7 @@
         <ul>
             <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
             <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
-            <li><button class="showMapBtn ui-btn ui-corner-all">Karte</button></li>
-            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
-            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="showMapBtn_B ui-btn ui-corner-all">Karte</button></li>
         </ul>
     </div>
 
@@ -150,7 +190,7 @@
 	</div>
 	
 	<div data-role="footer">
-		<h4>Udo Lang 2014</h4>
+		<h4>YodaSoft 2014</h4>
 	</div>
 	
 </div>
@@ -165,9 +205,7 @@
         <ul>
             <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
             <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
-            <li><button class="showMapBtn ui-btn ui-corner-all">Karte</button></li>
-            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
-            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="showMapBtn_B ui-btn ui-corner-all">Karte</button></li>
         </ul>
     </div>
 
@@ -184,7 +222,7 @@
 	</div>
 	
 	<div data-role="footer">
-		<h4>Udo Lang 2014</h4>
+		<h4>YodaSoft 2014</h4>
 	</div>
 	
 </div>
@@ -198,9 +236,7 @@
         <ul>
             <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
             <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
-            <li><button class="showMapBtn ui-btn ui-corner-all">Karte</button></li>
-            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
-            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+            <li><button class="showMapBtn_B ui-btn ui-corner-all">Karte</button></li>
         </ul>
     </div>
 
@@ -243,12 +279,115 @@
 	</div>
 	
 	<div data-role="footer">
-		<h4>Udo Lang 2014</h4>
+		<h4>YodaSoft 2014</h4>
 	</div>
 	
 </div>
 
-<div data-role="page" id="mapPage">
+
+
+<div data-role="page" id="quellenSearchPage">
+<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+    <a href="#startPage" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left">back</a>
+    <h1>Emissions-Quellen</h1>
+    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+    <div data-role="navbar">
+        <ul>
+            <li><button class="ui-btn ui-corner-all">&nbsp;</button></li>
+            <li><button class="ui-btn ui-corner-all">&nbsp;</button></li>
+            <li><button class="showMapBtn_Q ui-btn ui-corner-all">Karte</button></li>
+        </ul>
+    </div>
+
+</div>
+
+<div data-role="content">
+			<fieldset>        
+				<label for="nameIP_QSP">Name:</label>
+				<input id="nameIP_QSP" value="" type="text"></input>
+ 			</fieldset>
+
+	<ul id="quelleLV_QSP" data-role="listview" data-autodividers="true" data-split-icon="grid" data-split-theme="d" data-inset="true"></ul>
+	</div>
+	
+	<div data-role="footer">
+		<h4>YodaSoft 2014</h4>
+	</div>
+	
+</div>
+
+<div data-role="page" id="quelleDetailPage">
+<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+    <a href="#quellenSearchPage" data-rel="back" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left">back</a>
+
+    <h1>Emissions-Quellen</h1>
+    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+
+</div>
+
+<div data-role="content">
+		<h3>Quelle Details</h3>
+			<div id="photoContainer_QDP"></div>
+			<fieldset>
+				<label for="kennungbetrieb_QDP">Kennung Betrieb:</label>
+				<input id="kennungbetrieb_QDP" value="" type="text" disabled="disabled"></input>
+				<label for="betrieb_QDP">Betrieb:</label>
+				<input id="betrieb_QDP" value="" type="text"></input>
+				<label for="anschrift_QDP">Anschrift:</label>
+				<input id="anschrift_QDP" value="" type="text"></input>
+				<label for="anlage_QDP">Anlage:</label>
+				<input id="anlage_QDP" value="" type="text"></input>
+				<label for="teilanlage_QDP">Teilanlage:</label>
+				<input id="teilanlage" value="" type="text"></input>
+				<label for="quelle_QDP">Quelle:</label>
+				<input id="quelle_QDP" value="" type="text"></input>
+				<label for="quellenbeschreibung_QDP">Quellenbeschreibung:</label>
+				<input id="quellenbeschreibung_QDP" value="" type="text"></input>
+				<label for="ansprechpartner_QDP">Ansprechpartner:</label>
+				<input id="ansprechpartner_QDP" value="" type="text"></input>
+				<label for="geometry_QDP">geo:</label>
+				<input id="geometry_QDP" value="" type="text" disabled="disabled"></input>
+				<label for="hoehe_QDP">Höhe:</label>
+				<input id="hoehe_QDP" value="" type="text"></input>
+				<label for="lage_QDP">Lage:</label>
+				<input id="lage_QDP" value="" type="text"></input>
+				<label for="material_QDP">Material:</label>
+				<input id="material_QDP" value="" type="text"></input>
+				<label for="form_QDP">Form:</label>
+				<input id="form_QDP" value="" type="text"></input>
+				<label for="durchmesser_QDP">Durchmesser:</label>
+				<input id="durchmesser_QDP" value="" type="text"></input>
+				<label for="zugang_QDP">Zugang:</label>
+				<input id="zugang_QDP" value="" type="text"></input>
+				<label for="strom_QDP">Strom:</label>
+				<input id="strom_QDP" value="" type="text"></input>
+				<label for="messstutzen_QDP">Messstutzen:</label>
+				<input id="messstutzen_QDP" value="" type="text"></input>
+				<label for="temperatur_QDP">Temperatur:</label>
+				<input id="temperatur_QDP" value="" type="text"></input>
+				<label for="abgasgeschwindigkeit_QDP">Abgasgeschwindigkeit:</label>
+				<input id="abgasgeschwindigkeit_QDP" value="" type="text"></input>
+				<label for="dyndruck_QDP">dyn Druck:</label>
+				<input id="dyndruck_QDP" value="" type="text"></input>
+				<label for="statdruck_QDP">stat Druck:</label>
+				<input id="statdruck_QDP" value="" type="text"></input>
+				<label for="volumenstrom_QDP">Volumenstrom:</label>
+				<input id="volumenstrom_QDP" value="" type="text"></input>
+				<label for="komponenten_QDP">Komponenten:</label>
+				<input id="komponenten_QDP" value="" type="text"></input>
+				<label for="bemerkung_QDP">Bemerkung:</label>
+				<input id="bemerkung_QDP" value="" type="text"></input>
+ 			</fieldset>
+
+</div>
+	
+	<div data-role="footer">
+		<h4>YodaSoft 2014</h4>
+	</div>
+	
+</div>
+
+<div data-role="page" id="mapPage_B">
 <div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
     <!--  <button id="backBtn_MP" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</button>-->
     <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</a>
@@ -256,7 +395,26 @@
     <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
 </div>
 	<div data-role="content" style="padding:0px;margin:0px;">
-    	<div id="mapCanvas" style="padding:0px;margin:0px;"></div>
+    	<div id="mapCanvas_B" style="padding:0px;margin:0px;"></div>
+	</div>
+	<div data-role="footer">
+		<h4>2014</h4>
+	</div>
+</div>
+
+<div data-role="page" id="mapPage_Q">
+<div data-role="panel" id="detailPanel_MPQ" data-position="right" data-display="reveal">
+	<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete" data-rel="close">schließen</button>
+	<div id="detailContent_MPQ" style="font-size:8px"></div>
+</div>
+<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+    <!--  <button id="backBtn_MP" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</button>-->
+    <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</a>
+    <h1>Emissions-Quellen</h1>
+    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+</div>
+	<div data-role="content" style="padding:0px;margin:0px;">
+    	<div id="mapCanvas_Q" style="padding:0px;margin:0px;"></div>
 	</div>
 	<div data-role="footer">
 		<h4>2014</h4>
@@ -264,4 +422,5 @@
 </div>
 
 </body>
+<script src="https://apis.google.com/js/client.js?onload=initialize"></script>
 </html>

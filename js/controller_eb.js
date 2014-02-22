@@ -5,6 +5,12 @@ Controller = function() {
 	this.FT_ID_Quellen="15NHDW6cnXc6lCf2Y8DTnhGJWDT0w-0o8Mg1ocGc";
 	this.FT_apikey = "AIzaSyAZX14yLHGoDHYUuxfL9LV6wjhCP_afLV0";
 	
+	//login
+	this.loggedIn=false
+	
+	//page edit
+	this.editQSP=false;
+	
 	//photos
 	this.PicasaUser_ID="118338015824269465026";
 	this.PicasaAlbum_ID="5976541535623797537";
@@ -66,8 +72,11 @@ $(document).on('pageshow', '#betriebeSearchPLZPage', function(event, ui) {
 $(document).on('pageshow', '#quellenSearchPage', function(event, ui) {
 	ctr.showSearchQuellen_QSP();
 });
+$(document).on('pageshow', '#quelleDetailPage', function(event, ui) {
+	ctr.editQSP=false;
+});
 $(document).on('pagebeforehide', '#quelleDetailPage', function(event, ui) {
-	ctr.updateQuelle();
+	if(ctr.loggedIn && ctr.editQSP)ctr.updateQuelle();
 });
 $(document).on('pageshow', '#mapPage_B', function(event, ui) {
 	ctr.showMapPage_B();
@@ -120,6 +129,11 @@ $(document).on('tap', '.quelleSelBtn_QSP', function(event) {
 $("#nameIP_QSP").on("input", function(e) {
 	ctr.showSearchQuellen_QSP();
 });
+$("#quelleDetailPage input").on("input", function(e) {
+	ctr.editQSP=true;
+});
+
+
 $(document).on('tap', '#exitBtn', function() {
 	ctr.exitBtn_Tap();
 });
@@ -592,7 +606,7 @@ Controller.prototype.updateQuelle = function() {
 	query.push(" WHERE ROWID= '"+ctr.rowid_Q+"'");
 	//alert(query.join(""));
 	$.when(ctr.ft_queryPost(query.join(''))).then(function(data) {
-		//alert(JSON.stringify(data));
+		alert(JSON.stringify(data));
 		if(data.rows!=null && data.rows.length>0)rowID=data.rows[0][0];
 		deferred.resolve(rowID);
 	});

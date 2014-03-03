@@ -3,11 +3,7 @@
 <head>
 	<title>Luft-Emissions-Betriebe</title>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<style type="text/css">
-
-#mapPagex, #mapCanvasx { width: 100%; height: 100%; padding: 0; }
-</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1, maximum-scale=2">
 	
 	<!--jquery-->
 	<link rel="stylesheet" href="js/libs/jqm/jquery.mobile-1.4.0.min.css" />
@@ -44,15 +40,28 @@
 	        <label for="loginFLP">login:</label>
 	    	<input data-role="flipswitch" name="loginFLP" id="loginFLP" type="checkbox" data-mini="true"/>
 	    </div>
-		<h2>Betriebe-Suche:</h2>
+		<h2>Betriebe:</h2>
 		<a href="#betriebeSearchPosPage" data-role="button">In der N‰he</a>
 		<a href="#betriebeSearchPLZPage" data-role="button">Nach PLZ</a>
 		<a href="#betriebeSearchAdvancedPage" data-role="button">Erweitert</a>
-		<h2>Quellen-Suche:</h2>
-		<a href="#quellenSearchPage" data-role="button">Quellen</a>
+		<h2>Quellen:</h2>
+		<a href="#quellenSearchPage" data-role="button">Liste</a>
+		<a href="#addQuellePU" data-role="button" data-rel="popup" data-position-to="window" data-transition="pop">Neu</a>
 	</div>
 	<div data-role="footer">
 		<h4>YodaSoft 2014</h4>
+	</div>
+	<!--get location mode popup-->
+	<div data-role="popup" id="addQuellePU" data-theme="a" class="ui-corner-all">
+	    <div data-role="header" data-theme="a" class="ui-corner-top">
+	        <h1>Auswahl neuer Punkt</h1>
+	    </div>
+	    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+	        <h3 class="ui-title">Auswahl Standort</h3>
+	        <a id="useLocBtn_QN" href="#" data-role="button" data-transition="flow" data-theme="c">Standort verwenden</a>
+	    	<a id="manLocBtn_QN" href="#" data-role="button" data-transition="flow" data-theme="c">manuell eingeben</a>
+	        <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>
+	    </div>
 	</div>
 </div>
 
@@ -130,7 +139,6 @@
 	</div>
 	
 </div>
-
 
 <div data-role="page" id="betriebeSearchPLZPage">
 <div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
@@ -221,6 +229,40 @@
 </div>
 
 
+<div data-role="page" id="betriebDetailPage">
+<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+    <a href="#" data-rel="back" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left">back</a>
+
+    <h1>Emissions-Betriebe</h1>
+    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+
+</div>
+
+<div data-role="content">
+		<h3>Betrieb Details</h3>
+			<div id="photoContainer_BDP"></div>
+			<fieldset>
+				<label for="kennung_BDP">Kennung Betrieb:</label>
+				<input id="kennung_BDP" value="" type="text"></input>
+				<label for="name_BDP">Betrieb:</label>
+				<input id="name_BDP" value="" type="text"></input>
+				<label for="ort_BDP">Ort:</label>
+				<input id="ort_BDP" value="" type="text"></input>
+				<label for="anschrift_BDP">Anschrift:</label>
+				<input id="anschrift_BDP" value="" type="text"></input>
+				<label for="bundesland_BDP">Land:</label>
+				<input id="bundesland_BDP" value="" type="text"></input>
+				<label for="umweltkompartimentBDP">Medium:</label>
+				<input id="umweltkompartiment_BDP" value="" type="text"></input>
+				<label for="taetigkeitBDP">T‰tigkeit:</label>
+				<textarea id="taetigkeit_BDP" cols="40" rows="8"></textarea>
+ 			</fieldset>
+</div>
+	<div data-role="footer">
+		<h4>YodaSoft 2014</h4>
+	</div>
+</div>
+
 
 <div data-role="page" id="quellenSearchPage">
 <div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
@@ -254,7 +296,7 @@
 
 <div data-role="page" id="quelleDetailPage">
 <div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
-    <a href="#quellenSearchPage" data-rel="back" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left">back</a>
+    <a href="#quellenSearchPage" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left">back</a>
 
     <h1>Emissions-Quellen</h1>
     <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
@@ -269,6 +311,8 @@
 				<input id="kennungbetrieb_QDP" value="" type="text" disabled="disabled"></input>
 				<label for="betrieb_QDP">Betrieb:</label>
 				<input id="betrieb_QDP" value="" type="text"></input>
+				<label for="ort_QDP">Ort:</label>
+				<input id="ort_QDP" value="" type="text"></input>
 				<label for="anschrift_QDP">Anschrift:</label>
 				<input id="anschrift_QDP" value="" type="text"></input>
 				<label for="anlage_QDP">Anlage:</label>
@@ -281,7 +325,7 @@
 				<input id="quellenbeschreibung_QDP" value="" type="text"></input>
 				<label for="ansprechpartner_QDP">Ansprechpartner:</label>
 				<input id="ansprechpartner_QDP" value="" type="text"></input>
-				<label for="geometry_QDP">geo:</label>
+				<button id="editLocationBtn_QDP" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-location">geo</button>
 				<input id="geometry_QDP" value="" type="text" disabled="disabled"></input>
 				<label for="hoehe_QDP">Hˆhe:</label>
 				<input id="hoehe_QDP" value="" type="text"></input>
@@ -312,18 +356,19 @@
 				<label for="komponenten_QDP">Komponenten:</label>
 				<input id="komponenten_QDP" value="" type="text"></input>
 				<label for="bemerkung_QDP">Bemerkung:</label>
-				<input id="bemerkung_QDP" value="" type="text"></input>
+				<textarea cols="40" rows="8" id="bemerkung_QDP"></textarea>
  			</fieldset>
-
 </div>
-	
 	<div data-role="footer">
 		<h4>YodaSoft 2014</h4>
 	</div>
-	
 </div>
 
 <div data-role="page" id="mapPage_B">
+	<div data-role="panel" id="detailPanel_MPB" data-position="right" data-display="reveal">
+		<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete" data-rel="close">schlieﬂen</button>
+		<div id="detailContent_MPB"></div>
+	</div>
 <div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
     <!--  <button id="backBtn_MP" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</button>-->
     <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</a>
@@ -339,18 +384,87 @@
 </div>
 
 <div data-role="page" id="mapPage_Q">
-<div data-role="panel" id="detailPanel_MPQ" data-position="right" data-display="reveal">
-	<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete" data-rel="close">schlieﬂen</button>
-	<div id="detailContent_MPQ" style="font-size:8px"></div>
-</div>
-<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
-    <!--  <button id="backBtn_MP" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</button>-->
-    <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</a>
-    <h1>Emissions-Quellen</h1>
-    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
-</div>
+	<div data-role="panel" id="detailPanel_MPQ" data-position="right" data-display="reveal">
+		<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete" data-rel="close">schlieﬂen</button>
+		<div id="detailContent_MPQ"></div>
+	</div>
+	<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+	    <!--  <button id="backBtn_MP" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</button>-->
+	    <a href="#quellenSearchPage" data-rel="back" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</a>
+	    <h1>Emissions-Quellen</h1>
+	    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+	</div>
 	<div data-role="content" style="padding:0px;margin:0px;">
     	<div id="mapCanvas_Q" style="padding:0px;margin:0px;"></div>
+	</div>
+	<div data-role="footer">
+		<h4>2014</h4>
+	</div>
+</div>
+
+<div data-role="page" id="mapPage_QN">
+	<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+	    <!--  <button id="backBtn_MP" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</button>-->
+	    <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</a>
+	    <h1>Emi-Quelle Neu</h1>
+	    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+	    <div data-role="navbar">
+	        <ul>
+	            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+	            <li><button id="openSaveDlgBtn_QN" class=" ui-btn ui-corner-all">speichern</button></li>
+	            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+	        </ul>
+    	</div>
+	</div>
+	<div data-role="content" style="padding:0px;margin:0px;">
+    	<div id="mapCanvas_QN" style="padding:0px;margin:0px;"></div>
+	</div>
+	<div data-role="footer">
+		<h4>2014</h4>
+	</div>
+	
+		<!--save popup new quelle-->
+	<div data-role="popup" id="savePU_QN" data-theme="a" class="ui-corner-all">
+	    <div data-role="header" data-theme="a" class="ui-corner-top">
+	        <h1>Quelle speichern</h1>
+	    </div>
+	    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+	        	<fieldset>
+	        		<label id="messageLbl_QN" style="color:red"></label>
+	        		<label for="geometry_QN">geo:</label>
+					<input id="geometry_QN" value="" type="text" disabled="disabled"></input>
+					<label for="betriebIP_QN">Betrieb:</label>
+					<input id="betriebIP_QN" value="" type="text"></input>
+					<label for="ortIP_QN">Ort:</label>
+					<input id="ortIP_QN" value="" type="text"></input>
+					<label for="anlageIP_QN">Anlage:</label>
+					<input id="anlageIP_QN" value="" type="text"></input>
+					<label for="quelleIP_QN">Quelle:</label>
+					<input id="quelleIP_QN" value="" type="text"></input>
+				</fieldset>
+	        <a id="saveNewQuelleBtn_QN" href="#" data-role="button" data-transition="flow" data-theme="c">speichern</a>
+	        <a href="#" data-role="button" data-rel="back" data-theme="c">Cancel</a>
+	    </div>
+	</div>
+	
+</div>
+
+<div data-role="page" id="mapPage_QE">
+	<div data-role="header" style="overflow:hidden;" data-id="navbar1" data-position="fixed" data-theme="d">
+	    <!--  <button id="backBtn_MP" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</button>-->
+	    <a href="#quelleDetailPage" data-icon="arrow-l" data-iconpos="notext" class="ui-btn-left ui-corner-all">back</a>
+	    <h1>Emissions-Quellen</h1>
+	    <a href="#contactPage" data-role="button" data-icon="info" data-iconpos="notext" data-direction="reverse" class="contactLink ui-btn-right jqm-home">Info</a>
+		<div data-role="navbar">
+	        <ul>
+	            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+	            <li><button id="updateQuelleLocBtn_QE" class=" ui-btn ui-corner-all">‰ndern</button></li>
+	            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+	        </ul>
+    	</div>
+	</div>
+	<div data-role="content" style="padding:0px;margin:0px;">
+    	<div id="mapCanvas_QE" style="padding:0px;margin:0px;"></div>
 	</div>
 	<div data-role="footer">
 		<h4>2014</h4>

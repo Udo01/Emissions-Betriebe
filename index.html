@@ -308,7 +308,7 @@
 			<div id="photoContainer_QDP"></div>
 			<fieldset>
 				<label for="kennungbetrieb_QDP">Kennung Betrieb:</label>
-				<input id="kennungbetrieb_QDP" value="" type="text" disabled="disabled"></input>
+				<input id="kennungbetrieb_QDP" value="" type="text"></input>
 				<label for="betrieb_QDP">Betrieb:</label>
 				<input id="betrieb_QDP" value="" type="text"></input>
 				<label for="ort_QDP">Ort:</label>
@@ -317,8 +317,12 @@
 				<input id="anschrift_QDP" value="" type="text"></input>
 				<label for="anlage_QDP">Anlage:</label>
 				<input id="anlage_QDP" value="" type="text"></input>
+				<label for="anlagenbeschreibung_QDP">Anlagenbeschreibung:</label>
+				<input id="anlagenbeschreibung_QDP" value="" type="text"></input>
 				<label for="teilanlage_QDP">Teilanlage:</label>
-				<input id="teilanlage" value="" type="text"></input>
+				<input id="teilanlage_QDP" value="" type="text"></input>
+				<label for="brennstoff_QDP">Brennstoff:</label>
+				<input id="brennstoff_QDP" value="" type="text"></input>
 				<label for="quelle_QDP">Quelle:</label>
 				<input id="quelle_QDP" value="" type="text"></input>
 				<label for="quellenbeschreibung_QDP">Quellenbeschreibung:</label>
@@ -356,7 +360,7 @@
 				<label for="komponenten_QDP">Komponenten:</label>
 				<input id="komponenten_QDP" value="" type="text"></input>
 				<label for="bemerkung_QDP">Bemerkung:</label>
-				<textarea cols="40" rows="8" id="bemerkung_QDP"></textarea>
+				<textarea id="bemerkung_QDP"></textarea>
  			</fieldset>
 </div>
 	<div data-role="footer">
@@ -415,6 +419,12 @@
 	            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
 	        </ul>
     	</div>
+    	<div data-role="navbar">
+	        <ul>
+	            <li><input id="addressIP_QN" value="" type="search"></input></li>
+	            <li><button id="searchAddressBtn_QN" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-search ui-btn-icon-notext">suchen</button></li>
+	        </ul>
+    	</div>
 	</div>
 	<div data-role="content" style="padding:0px;margin:0px;">
     	<div id="mapCanvas_QN" style="padding:0px;margin:0px;"></div>
@@ -437,6 +447,8 @@
 					<input id="betriebIP_QN" value="" type="text"></input>
 					<label for="ortIP_QN">Ort:</label>
 					<input id="ortIP_QN" value="" type="text"></input>
+					<label for="anschriftIP_QN">Anschrift:</label>
+					<input id="anschriftIP_QN" value="" type="text"></input>
 					<label for="anlageIP_QN">Anlage:</label>
 					<input id="anlageIP_QN" value="" type="text"></input>
 					<label for="quelleIP_QN">Quelle:</label>
@@ -460,6 +472,12 @@
 	            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
 	            <li><button id="updateQuelleLocBtn_QE" class=" ui-btn ui-corner-all">ändern</button></li>
 	            <li><button class="ui-btn ui-corner-all" disabled="disabled">&nbsp;</button></li>
+	        </ul>
+    	</div>
+    	<div data-role="navbar">
+	        <ul>
+	            <li><input id="addressIP_QE" value="" type="search"></input></li>
+	            <li><button id="searchAddressBtn_QE" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-search ui-btn-icon-notext">suchen</button></li>
 	        </ul>
     	</div>
 	</div>

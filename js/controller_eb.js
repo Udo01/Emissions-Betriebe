@@ -6,7 +6,7 @@ Controller = function() {
 	this.FT_apikey = "AIzaSyAZX14yLHGoDHYUuxfL9LV6wjhCP_afLV0";
 	
 	//login
-	this.loggedIn=false
+	this.loggedIn=false;
 	
 	//page edit
 	this.editQSP=false;
@@ -152,7 +152,7 @@ $(document).on('tap', '#updateQuelleLocBtn_QE', function(event) {
 $("#nameIP_QSP").on("input", function(e) {
 	ctr.showSearchQuellen_QSP();
 });
-$("#quelleDetailPage input").on("input", function(e) {
+$("#quelleDetailPage input,textarea").on("input", function(e) {
 	ctr.editQSP=true;
 });
 $(document).on('tap', '#useLocBtn_QN', function() {
@@ -163,15 +163,22 @@ $(document).on('tap', '#manLocBtn_QN', function() {
 	$("#addQuellePU").popup("close");
 	ctr.addQuelleManualPos();
 });
+$(document).on('tap', '#searchAddressBtn_QN', function() {
+	ctr.searchAddress_QN();
+});
 $(document).on('tap', '#openSaveDlgBtn_QN', function() {
 	ctr.openSavePU_QN();
 });
 $(document).on('tap', '#saveNewQuelleBtn_QN', function() {
 	ctr.saveNewQuelle_QN();
 });
+$(document).on('tap', '#searchAddressBtn_QE', function() {
+	ctr.searchAddress_QE();
+});
 $(document).on('tap', '#exitBtn', function() {
 	ctr.exitBtn_Tap();
 });
+
 
 }
 //end init
@@ -493,14 +500,16 @@ Controller.prototype.doSearchQuellen = function(name,actPos,actPosDist,listConta
 	}
 	
 	ctr.sql_where_quellen=where;
+	
 	query+=where+" ORDER BY 'betrieb'";
 	query += " LIMIT 200";
 	$.mobile.loading("show");
 	$.when(ctr.ft_queryGet(query)).then(function(data) {
 		$.mobile.loading("hide");
 		if(data.rows!=null){
+			data.rows = $(data.rows).sort(sortRecords);
 			ctr.quellenList = data.rows;
-			ctr.fillQuellenListName(data.rows,listContainer);
+			ctr.fillQuellenListName(ctr.quellenList,listContainer);
 		}
 		else listContainer.empty();
 	});
@@ -508,7 +517,7 @@ Controller.prototype.doSearchQuellen = function(name,actPos,actPosDist,listConta
 
 Controller.prototype.getQuelle = function(rowid) {
 	var deferred = new $.Deferred();
-	var query = "SELECT rowid,kennungbetrieb,betrieb,ort,anschrift,anlage,teilanlage,quelle,quellenbeschreibung,ansprechpartner,geometry,hoehe,lage,material,form,durchmesser,zugang,strom,messstutzen,temperatur,abgasgeschwindigkeit,dyndruck,statdruck,volumenstrom,komponenten,bemerkung FROM "
+	var query = "SELECT rowid,kennungbetrieb,betrieb,ort,anschrift,anlage,anlagenbeschreibung,teilanlage,brennstoff,quelle,quellenbeschreibung,ansprechpartner,geometry,hoehe,lage,material,form,durchmesser,zugang,strom,messstutzen,temperatur,abgasgeschwindigkeit,dyndruck,statdruck,volumenstrom,komponenten,bemerkung FROM "
 	+ ctr.FT_ID_Quellen
 	+" WHERE rowid='" + rowid + "'";
 	$.mobile.loading("show");
@@ -545,8 +554,8 @@ Controller.prototype.fillQuellenListName = function(rows,listContainer) {
 
 Controller.prototype.showDetails_QDP = function() {
 	$.when(ctr.getQuelle(ctr.rowid_Q)).then(function(quelle) {
-		var lat=quelle[10].geometry.coordinates[1];
-		var lng=quelle[10].geometry.coordinates[0];
+		var lat=quelle[12].geometry.coordinates[1];
+		var lng=quelle[12].geometry.coordinates[0];
 		var location=new google.maps.LatLng(lat,lng);
 		var photoList=ctr.getGooglePhotosFromPos(location,1);
 		ctr.editQuellePoint=location;
@@ -565,6 +574,8 @@ Controller.prototype.showDetails_QDP = function() {
 			);
 		
 		});
+		//reset all fields
+		$("#quelleDetailPage input").val("");
 		
 		$.mobile.changePage("#quelleDetailPage");
 		$("#rowid_QDP").val(quelle[0]);
@@ -573,27 +584,29 @@ Controller.prototype.showDetails_QDP = function() {
 		$("#ort_QDP").val(quelle[3]);
 		$("#anschrift_QDP").val(quelle[4]);
 		$("#anlage_QDP").val(quelle[5]);
-		$("#teilanlage_QDP").val(quelle[6]);
-		$("#quelle_QDP").val(quelle[7]);
-		$("#quellenbeschreibung_QDP").val(quelle[8]);
-		$("#ansprechpartner_QDP").val(quelle[9]);
-		$("#geometry_QDP").val(quelle[10].geometry.coordinates[1]+" "+quelle[10].geometry.coordinates[0]);
-		$("#hoehe_QDP").val(quelle[11]);
-		$("#lage_QDP").val(quelle[12]);
-		$("#material_QDP").val(quelle[13]);
-		$("#form_QDP").val(quelle[14]);
-		$("#durchmesser_QDP").val(quelle[15]);
-		$("#zugang_QDP").val(quelle[16]);
-		$("#strom_QDP").val(quelle[17]);
-		$("#messstutzen_QDP").val(quelle[18]);
-		$("#temperatur_QDP").val(quelle[19]);
-		$("#abgasgeschwindigkeit_QDP").val(quelle[20]);
-		$("#dyndruck_QDP").val(quelle[21]);
-		$("#statdruck_QDP").val(quelle[22]);
-		$("#volumenstrom_QDP").val(quelle[23]);
-		$("#komponenten_QDP").val(quelle[24]);
-		$("#bemerkung_QDP").html(quelle[25]);
-		
+		$("#anlagenbeschreibung_QDP").val(quelle[6]);
+		$("#teilanlage_QDP").val(quelle[7]);
+		$("#brennstoffe_QDP").val(quelle[8]);
+		$("#quelle_QDP").val(quelle[9]);
+		$("#quellenbeschreibung_QDP").val(quelle[10]);
+		$("#ansprechpartner_QDP").val(quelle[11]);
+		$("#geometry_QDP").val(quelle[12].geometry.coordinates[1]+" "+quelle[12].geometry.coordinates[0]);
+		$("#hoehe_QDP").val(quelle[13]);
+		$("#lage_QDP").val(quelle[14]);
+		$("#material_QDP").val(quelle[15]);
+		$("#form_QDP").val(quelle[16]);
+		$("#durchmesser_QDP").val(quelle[17]);
+		$("#zugang_QDP").val(quelle[18]);
+		$("#strom_QDP").val(quelle[19]);
+		$("#messstutzen_QDP").val(quelle[20]);
+		$("#temperatur_QDP").val(quelle[21]);
+		$("#abgasgeschwindigkeit_QDP").val(quelle[22]);
+		$("#dyndruck_QDP").val(quelle[23]);
+		$("#statdruck_QDP").val(quelle[24]);
+		$("#volumenstrom_QDP").val(quelle[25]);
+		$("#komponenten_QDP").val(quelle[26]);
+		$("#bemerkung_QDP").val(quelle[27]);
+
 		$(".swipebox").swipebox();
 	});
 }
@@ -644,9 +657,11 @@ Controller.prototype.addQuellenLayer = function() {
 		+"Ort:"+e.row['ort'].value+"<br/>"
 		+"Anschrift:"+e.row['anschrift'].value+"<br/>"
 		+"Anlage:"+e.row['anlage'].value+"<br/>"
+		+"Anlagenbeschr:"+e.row['anlagenbeschreibung'].value+"<br/>"
 		+"Teilanlage:"+e.row['teilanlage'].value+"<br/>"
+		+"Brennstoff:"+e.row['brennstoff'].value+"<br/>"
 		+"Quelle:"+e.row['quelle'].value+"<br/>"
-		+"Quellenbeschr.:"+e.row['quellenbeschreibung'].value+"<br/>"
+		+"Quellenbeschr:"+e.row['quellenbeschreibung'].value+"<br/>"
 		+"Ansprechpartner:"+e.row['ansprechpartner'].value+"<br/>"
 		+"Höhe:"+e.row['hoehe'].value+"<br/>"
 		+"Lage:"+e.row['lage'].value+"<br/>"
@@ -687,9 +702,13 @@ Controller.prototype.updateQuelleFT = function() {
 	query.push("UPDATE ");
 	query.push(ctr.FT_ID_Quellen);
 	query.push(" SET 'betrieb'='"+$("#betrieb_QDP").val()+"',");
+	query.push(" 'kennungbetrieb'='"+$("#kennungbetrieb_QDP").val()+"',");
 	query.push(" 'ort'='"+$("#ort_QDP").val()+"',");
 	query.push(" 'anschrift'='"+$("#anschrift_QDP").val()+"',");
 	query.push(" 'anlage'='"+$("#anlage_QDP").val()+"',");
+	query.push(" 'anlagenbeschreibung'='"+$("#anlagenbeschreibung_QDP").val()+"',");
+	query.push(" 'teilanlage'='"+$("#teilanlage_QDP").val()+"',");
+	query.push(" 'brennstoff'='"+$("#brennstoff_QDP").val()+"',");
 	query.push(" 'quelle'='"+$("#quelle_QDP").val()+"',");
 	query.push(" 'quellenbeschreibung'='"+$("#quellenbeschreibung_QDP").val()+"',");
 	query.push(" 'geometry'='<Point><coordinates>" + ctr.editQuellePoint.lng()+ "," + ctr.editQuellePoint.lat()+ "</coordinates></Point>',");
@@ -707,7 +726,7 @@ Controller.prototype.updateQuelleFT = function() {
 	query.push(" 'statdruck'='"+$("#statdruck_QDP").val()+"',");
 	query.push(" 'volumenstrom'='"+$("#volumenstrom_QDP").val()+"',");
 	query.push(" 'komponenten'='"+$("#komponenten_QDP").val()+"',");
-	query.push(" 'bemerkung'='"+$("#bemerkung_QDP").html()+"'");
+	query.push(" 'bemerkung'='"+$("#bemerkung_QDP").val()+"'");
 	query.push(" WHERE ROWID= '"+ctr.rowid_Q+"'");
 	//alert(query.join(""));
 	$.when(ctr.ft_queryPost(query.join(''))).then(function(data) {
@@ -768,6 +787,30 @@ Controller.prototype.addEditMarker_QE = function(pos) {
 		});
 }
 
+Controller.prototype.searchAddress_QE=function() {
+	if($("#addressIP_QE").val()!=""){
+	var address = $("#addressIP_QE").val();
+		ctr.geocoder.geocode( { 'address': address}, function(results, status) {
+	    if (status == google.maps.GeocoderStatus.OK) {
+	    	//clear marker
+	    	if(ctr.editMarker!=null)ctr.editMarker.setMap(null);
+	    	//set center
+	    	ctr.map_QE.setCenter(results[0].geometry.location);
+	    	//add marker
+	    	ctr.editMarker = new google.maps.Marker({
+	          map: ctr.map_QE,
+	          position: results[0].geometry.location,
+			  draggable : true,
+			  animation : google.maps.Animation.DROP,
+			  title : "neue Position"
+	      });
+	    } else {
+	      alert('Geocode was not successful for the following reason: ' + status);
+	    }
+	  });
+	}
+}
+
 Controller.prototype.updateQuelleLoc_QE = function() {
 	var lat=ctr.editMarker.getPosition().lat();
 	var lng=ctr.editMarker.getPosition().lng();
@@ -810,6 +853,30 @@ Controller.prototype.addQuelleManualPos= function() {
 	});
 }
 
+Controller.prototype.searchAddress_QN=function() {
+	if($("#addressIP_QN").val()!=""){
+	var address = $("#addressIP_QN").val();
+		ctr.geocoder.geocode( { 'address': address}, function(results, status) {
+	    if (status == google.maps.GeocoderStatus.OK) {
+	    	//clear marker
+	    	if(ctr.newMarker!=null)ctr.newMarker.setMap(null);
+	    	//set center
+	    	ctr.map_QN.setCenter(results[0].geometry.location);
+	    	//add marker
+	    	ctr.newMarker = new google.maps.Marker({
+	          map: ctr.map_QN,
+	          position: results[0].geometry.location,
+			  draggable : true,
+			  animation : google.maps.Animation.DROP,
+			  title : "neue Position"
+	      });
+	    } else {
+	      alert('Geocode was not successful for the following reason: ' + status);
+	    }
+	  });
+	}
+}
+
 Controller.prototype.drawMap_QN = function(container) {
 	$("#"+container).empty();
 	ctr.map_QN = new google.maps.Map(document.getElementById(container), {
@@ -840,28 +907,43 @@ Controller.prototype.addNewMarker_QN = function(pos) {
 
 Controller.prototype.openSavePU_QN=function(){
 	if(ctr.newMarker!=null){
-		$("#geometry_QN").val(ctr.newMarker.getPosition().lat()+" "+ctr.newMarker.getPosition().lng());
-		$("#messageLbl_QN").html("");
-		$("#savePU_QN").popup("open");	
+		var lat=ctr.newMarker.getPosition().lat();
+		var lng=ctr.newMarker.getPosition().lng();
+		var point=new google.maps.LatLng(lat,lng);
+		
+		$.when(ctr.getAddress(point)).then(function(address) {
+			
+			if(address!=null){
+				$("#anschriftIP_QN").val(address.formatted_address);
+				$("#ortIP_QN").val(ctr.getAddressItem(address, "locality"));
+			}
+			$("#geometry_QN").val(lat+" "+lng);
+			$("#messageLbl_QN").html("");
+			$("#savePU_QN").popup("open");	
+		});
 	}
 }
+
 Controller.prototype.saveNewQuelle_QN=function(){
 	var quelle={};
+	var point;
 	quelle.betrieb= $("#betriebIP_QN").val();
 	quelle.ort= $("#ortIP_QN").val();
+	quelle.anshrift= $("#anschriftIP_QN").val();
 	quelle.anlage= $("#anlageIP_QN").val();
 	quelle.quelle= $("#quelleIP_QN").val();
 	quelle.lat=ctr.newMarker.getPosition().lat();
 	quelle.lng=ctr.newMarker.getPosition().lng();
-	
-	$.mobile.loading("show");
-	$.when(ctr.addQuelleFT(quelle)).then(function(rowid) {
-		$.mobile.loading("hide");
-		if(rowid>0)$("#savePU_QN").popup("close");	
-		else{
-			$("#messageLbl_QN").html("Fehler beim speichern");
-		}
-	});
+
+		//add quelle
+		$.mobile.loading("show");
+		$.when(ctr.addQuelleFT(quelle)).then(function(rowid) {
+			$.mobile.loading("hide");
+			if(rowid>0)$("#savePU_QN").popup("close");	
+			else{
+				$("#messageLbl_QN").html("Fehler beim speichern");
+			}
+		});
 }
 
 Controller.prototype.addQuelleFT = function(quelle) {
@@ -873,14 +955,16 @@ Controller.prototype.addQuelleFT = function(quelle) {
 	if(!quelle.lat)quelle.lat=0;
 	if(!quelle.betrieb)quelle.betrieb="";
 	if(!quelle.ort)quelle.ort="";
+	if(!quelle.anschrift)quelle.anschrift="";
 	if(!quelle.anlage)quelle.anlage="";
 	if(!quelle.quelle)quelle.quelle="";
 
 	query.push("INSERT INTO ");
 	query.push(ctr.FT_ID_Quellen);
-	query.push(" (betrieb,ort,anlage,quelle,geometry) VALUES (");
+	query.push(" (betrieb,ort,anschrift,anlage,quelle,geometry) VALUES (");
 	query.push("'" + quelle.betrieb + "', ");
 	query.push("'" + quelle.ort + "', ");
+	query.push("'" + quelle.anschrift + "', ");
 	query.push("'" + quelle.anlage + "', ");
 	query.push("'" + quelle.quelle + "', ");
 	query.push("'<Point><coordinates>" + quelle.lng
@@ -1023,6 +1107,39 @@ Controller.prototype.getPosFromZip = function(zip) {
 	return deferred.promise();
 }
 
+//reverse geocoding
+Controller.prototype.getAddress = function(latlng) {
+	var deferred = new $.Deferred();
+	ctr.geocoder.geocode({
+		'latLng' : latlng
+	},
+			function(results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					if (results[0]) {
+						deferred.resolve(results[0]);
+					}
+				} else {
+					//alert("Geocoder failed due to: " + status);
+					deferred.resolve(null);
+				}
+			});
+	return deferred.promise();
+}
+
+//get address item from address
+Controller.prototype.getAddressItem = function(jsonObject, typeName) {
+	var returnVal = "";
+	$.each(jsonObject.address_components, function(i, item) {
+		$.each(item.types, function(t, type) {
+			if (new String(type) == typeName) {
+				returnVal = item.long_name;
+			}
+		});
+	});
+	return returnVal;
+}
+
+
 // Send an SQL query to Fusion Tables with get
 Controller.prototype.ft_queryGet = function(query) {
 	var encodedQuery = encodeURIComponent(query);
@@ -1090,4 +1207,31 @@ Controller.prototype.calculateDistance =function(location1,location2)
 Controller.prototype.toRad=function(deg) 
 {
 		return deg * Math.PI/180;
+}
+
+//sort json list with multiple fields
+function sortRecords(a, b){
+    if (a[1] > b[1]){
+        return 1;
+    } else if (a[1] < b[1]){
+        return -1;
+    } else if (a[2] > b[2]){
+        return 1;
+    } else if (a[2] < b[2]){
+        return -1;
+    } else if (a[3] > b[3]){
+        return 1;
+    } else if (a[3] < b[3]){
+        return -1;
+    } else if (a[4] > b[4]){
+        return -1;
+    } else if (a[4] < b[4]){
+        return 1;
+    } else if (a[5] > b[5]){
+        return -1;
+    } else if (a[5] < b[5]){
+        return 1;
+    } else {
+        return 0;
+    }
 }

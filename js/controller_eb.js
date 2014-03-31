@@ -586,7 +586,7 @@ Controller.prototype.showDetails_QDP = function() {
 		$("#anlage_QDP").val(quelle[5]);
 		$("#anlagenbeschreibung_QDP").val(quelle[6]);
 		$("#teilanlage_QDP").val(quelle[7]);
-		$("#brennstoffe_QDP").val(quelle[8]);
+		$("#brennstoff_QDP").val(quelle[8]);
 		$("#quelle_QDP").val(quelle[9]);
 		$("#quellenbeschreibung_QDP").val(quelle[10]);
 		$("#ansprechpartner_QDP").val(quelle[11]);

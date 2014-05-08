@@ -929,7 +929,7 @@ Controller.prototype.saveNewQuelle_QN=function(){
 	var point;
 	quelle.betrieb= $("#betriebIP_QN").val();
 	quelle.ort= $("#ortIP_QN").val();
-	quelle.anshrift= $("#anschriftIP_QN").val();
+	quelle.anschrift= $("#anschriftIP_QN").val();
 	quelle.anlage= $("#anlageIP_QN").val();
 	quelle.quelle= $("#quelleIP_QN").val();
 	quelle.lat=ctr.newMarker.getPosition().lat();
@@ -937,9 +937,12 @@ Controller.prototype.saveNewQuelle_QN=function(){
 
 		//add quelle
 		$.mobile.loading("show");
+
 		$.when(ctr.addQuelleFT(quelle)).then(function(rowid) {
 			$.mobile.loading("hide");
-			if(rowid>0)$("#savePU_QN").popup("close");	
+			if(rowid>0){
+				$.mobile.changePage("#startPage");
+			}	
 			else{
 				$("#messageLbl_QN").html("Fehler beim speichern");
 			}

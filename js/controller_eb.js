@@ -152,6 +152,9 @@ $(document).on('tap', '#updateQuelleLocBtn_QE', function(event) {
 $("#nameIP_QSP").on("input", function(e) {
 	ctr.showSearchQuellen_QSP();
 });
+$("#ortIP_QSP").on("input", function(e) {
+	ctr.showSearchQuellen_QSP();
+});
 $("#quelleDetailPage input,textarea").on("input", function(e) {
 	ctr.editQSP=true;
 });
@@ -196,7 +199,6 @@ Controller.prototype.exitBtn_Tap = function(){
 
 //Betriebe
 Controller.prototype.doSearchBetriebe = function(name,branche,actPos,actPosDist,plzPos,plzPosDist,listContainer) {
-
 	ctr.mapMode=0;
 	var nameArr = name.split(" ", 2);
 	var where="";
@@ -477,11 +479,12 @@ Controller.prototype.getBetrieb = function(rowid) {
 //Quellen
 Controller.prototype.showSearchQuellen_QSP = function() {
 	var name=$("#nameIP_QSP").val();
+	var ort=$("#ortIP_QSP").val();
 	var listContainer=$("#quelleLV_QSP");
-	ctr.doSearchQuellen(name,null,null,listContainer);
+	ctr.doSearchQuellen(name,ort,null,null,listContainer);
 }
 
-Controller.prototype.doSearchQuellen = function(name,actPos,actPosDist,listContainer) {
+Controller.prototype.doSearchQuellen = function(name,ort,actPos,actPosDist,listContainer) {
 	var nameArr = name.split(" ", 2);
 	var where="";
 	var query = "SELECT rowid,betrieb,ort,anlage,teilanlage,quelle,anschrift,geometry FROM "
@@ -492,6 +495,10 @@ Controller.prototype.doSearchQuellen = function(name,actPos,actPosDist,listConta
 		where= " betrieb CONTAINS IGNORING CASE '" + nameArr[0] + "'";
 		if (nameArr.length > 1)
 			where += " AND betrieb CONTAINS IGNORING CASE '" + nameArr[1] + "'";
+	}
+	
+	if(ort !=null){
+		where += " AND ort CONTAINS IGNORING CASE '" + ort+ "'";
 	}
 	
 	if(actPos!=null && actPosDist!=null){
@@ -557,7 +564,7 @@ Controller.prototype.showDetails_QDP = function() {
 		var lat=quelle[12].geometry.coordinates[1];
 		var lng=quelle[12].geometry.coordinates[0];
 		var location=new google.maps.LatLng(lat,lng);
-		var photoList=ctr.getGooglePhotosFromPos(location,1);
+		var photoList=ctr.getGooglePhotosFromPos(location,0.5);
 		ctr.editQuellePoint=location;
 		$("#photoContainer_QDP").html("");
 		
@@ -1099,8 +1106,8 @@ Controller.prototype.getPosFromZip = function(zip) {
 	function(results, status) {
 		if (status == google.maps.GeocoderStatus.OK) {
 			if (results[0]) {
-				var lat=results[0].geometry.location.e;
-				var lng=results[0].geometry.location.d;
+				var lat=results[0].geometry.location.lat();
+				var lng=results[0].geometry.location.lng();
 				var pos = new google.maps.LatLng(lat,lng);
 				deferred.resolve(pos);
 			}
